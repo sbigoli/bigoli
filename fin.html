@@ -13,8 +13,13 @@
     $(document).ready(function() {
       // Fazendo uma solicitação GET para a página da Suno
       $.get("https://www.suno.com.br/guias/taxa-selic/", function(data) {
-        // Encontrando o último valor publicado para a coluna "Meta Selic % a.a"
-        const ultimoValorMetaSelic = $(data).find("table tr:nth-child(2) td:nth-child(2)").text();
+        // Encontrando todos os valores da coluna "Meta Selic % a.a"
+        const valoresMetaSelic = $(data).find("table tr:not(:first-child) td:nth-child(2)").map(function() {
+          return $(this).text();
+        }).get();
+
+        // Pegando o último valor da lista
+        const ultimoValorMetaSelic = valoresMetaSelic[valoresMetaSelic.length - 1];
 
         // Atualizando o parágrafo com o último valor encontrado
         $('#ultimoValorMetaSelic').append(ultimoValorMetaSelic);

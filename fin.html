@@ -3,35 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soma dos Valores da Selic nos Últimos 30 Dias</title>
+  <title>Soma dos Valores da Selic nos Últimos 360 Dias</title>
 </head>
 <body>
   <p id="somaSelic"></p>
 
   <script>
-    async function getSomaSelicUltimos30Dias() {
+    async function getSomaSelicUltimos360Dias() {
       const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json');
       const data = await response.json();
 
-      // Obtendo a data atual e a data de 30 dias atrás
+      // Obtendo a data atual e a data de 360 dias atrás
       const hoje = new Date();
-      const data30DiasAtras = new Date(hoje);
-      data30DiasAtras.setDate(data30DiasAtras.getDate() - 30);
+      const data360DiasAtras = new Date(hoje);
+      data360DiasAtras.setDate(data360DiasAtras.getDate() - 360);
 
-      // Filtrando os dados para os últimos 30 dias
-      const dadosUltimos30Dias = data.filter(item => {
+      // Filtrando os dados para os últimos 360 dias
+      const dadosUltimos360Dias = data.filter(item => {
         const dataItem = new Date(item.data);
-        return dataItem >= data30DiasAtras && dataItem <= hoje;
+        return dataItem >= data360DiasAtras && dataItem <= hoje;
       });
 
-      // Calculando a soma dos valores da Selic nos últimos 30 dias
-      const somaSelic = dadosUltimos30Dias.reduce((total, item) => total + parseFloat(item.valor), 0);
+      // Calculando a soma dos valores da Selic nos últimos 360 dias
+      const somaSelic = dadosUltimos360Dias.reduce((total, item) => total + parseFloat(item.valor), 0);
 
-      document.getElementById('somaSelic').innerText = `Soma dos valores da Selic nos últimos 30 dias: ${somaSelic.toFixed(2)}%`;
+      document.getElementById('somaSelic').innerText = `Soma dos valores da Selic nos últimos 360 dias: ${somaSelic.toFixed(2)}%`;
     }
 
     // Chamando a função de obtenção da soma da Selic ao carregar a página
-    getSomaSelicUltimos30Dias();
+    getSomaSelicUltimos360Dias();
   </script>
 </body>
 </html>

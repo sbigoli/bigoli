@@ -6,27 +6,40 @@
   <title>Valores da Taxa Selic</title>
 </head>
 <body>
-  <p>Data: <span id="data"></span></p>
-  <p>Vigência: <span id="vigencia"></span></p>
-  <p>Meta: <span id="meta"></span></p>
+  <p><strong>Primeira linha da tabela:</strong></p>
+  <ul id="headers"></ul>
+
+  <p><strong>Valores da primeira linha do tbody:</strong></p>
+  <ul id="values"></ul>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
       // Fazendo uma solicitação GET para a página da Suno
       $.get("https://www.suno.com.br/guias/taxa-selic/", function(data) {
-        // Encontrando o tbody
-        const tbody = $(data).find("tbody");
+        // Encontrando a tabela e o tbody
+        const table = $(data).find("table");
+        const tbody = table.find("tbody");
 
-        // Encontrando os valores na primeira tr do tbody
-        const dataValor = tbody.find("tr:first-child td:nth-child(1)").text().trim();
-        const vigenciaValor = tbody.find("tr:first-child td:nth-child(2)").text().trim();
-        const metaValor = tbody.find("tr:first-child td:nth-child(3)").text().trim();
+        // Encontrando os cabeçalhos (<th>) da tabela
+        const headers = table.find("th").map(function() {
+          return $(this).text().trim();
+        }).get();
 
-        // Atualizando os elementos com os valores encontrados
-        $("#data").text(dataValor);
-        $("#vigencia").text(vigenciaValor);
-        $("#meta").text(metaValor);
+        // Exibindo os cabeçalhos na primeira linha
+        headers.forEach(function(header) {
+          $("#headers").append(`<li>${header}</li>`);
+        });
+
+        // Encontrando os valores na primeira linha do tbody
+        const values = tbody.find("tr:first-child td").map(function() {
+          return $(this).text().trim();
+        }).get();
+
+        // Exibindo os valores na segunda linha
+        values.forEach(function(value) {
+          $("#values").append(`<li>${value}</li>`);
+        });
       });
     });
   </script>

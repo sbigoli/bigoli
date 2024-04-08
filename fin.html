@@ -3,35 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soma dos Valores da Selic nos Últimos 360 Dias</title>
+  <title>Taxa Selic</title>
 </head>
 <body>
-  <p id="somaSelic"></p>
+  <p id="selicInfo">A taxa Selic hoje é:</p>
+  <p id="selicValue"></p>
 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    async function getSomaSelicUltimos360Dias() {
-      const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json');
-      const data = await response.json();
+    axios.get('https://www.suno.com.br/guias/taxa-selic/')
+      .then(response => {
+        // Carregar a página HTML em um elemento escondido
+        const htmlContent = $('<div>').html(response.data);
 
-      // Obtendo a data atual e a data de 360 dias atrás
-      const hoje = new Date();
-      const data360DiasAtras = new Date(hoje);
-      data360DiasAtras.setDate(data360DiasAtras.getDate() - 360);
+        // Encontrar o valor da taxa Selic na página
+        const selicValue = htmlContent.find('.taxaselic-numero').text();
 
-      // Filtrando os dados para os últimos 360 dias
-      const dadosUltimos360Dias = data.filter(item => {
-        const dataItem = new Date(item.data);
-        return dataItem >= data360DiasAtras && dataItem <= hoje;
+        // Atualizar o elemento HTML com o valor da taxa Selic
+        $('#selicValue').text(selicValue);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar a informação:', error);
       });
-
-      // Calculando a soma dos valores da Selic nos últimos 360 dias
-      const somaSelic = dadosUltimos360Dias.reduce((total, item) => total + parseFloat(item.valor), 0);
-
-      document.getElementById('somaSelic').innerText = `Soma dos valores da Selic nos últimos 360 dias: ${somaSelic.toFixed(2)}%`;
-    }
-
-    // Chamando a função de obtenção da soma da Selic ao carregar a página
-    getSomaSelicUltimos360Dias();
   </script>
 </body>
 </html>

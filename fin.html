@@ -3,29 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taxa Selic</title>
+  <title>Último Valor da Meta Selic</title>
 </head>
 <body>
-  <p id="selicInfo">A taxa Selic hoje é:</p>
-  <p id="selicValue"></p>
+  <p id="ultimoValorMetaSelic">Último valor da Meta Selic % a.a:</p>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    axios.get('https://www.suno.com.br/guias/taxa-selic/')
-      .then(response => {
-        // Carregar a página HTML em um elemento escondido
-        const htmlContent = $('<div>').html(response.data);
+    $(document).ready(function() {
+      // Fazendo uma solicitação GET para a página da Suno
+      $.get("https://www.suno.com.br/guias/taxa-selic/", function(data) {
+        // Encontrando o último valor publicado para a coluna "Meta Selic % a.a"
+        const ultimoValorMetaSelic = $(data).find("table tr:nth-child(2) td:nth-child(2)").text();
 
-        // Encontrar o valor da taxa Selic na página
-        const selicValue = htmlContent.find('.taxaselic-numero').text();
-
-        // Atualizar o elemento HTML com o valor da taxa Selic
-        $('#selicValue').text(selicValue);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar a informação:', error);
+        // Atualizando o parágrafo com o último valor encontrado
+        $('#ultimoValorMetaSelic').append(ultimoValorMetaSelic);
       });
+    });
   </script>
 </body>
 </html>

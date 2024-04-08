@@ -6,7 +6,7 @@
   <title>Informações Financeiras</title>
 </head>
 <body>
-  <p id="selicAtual"></p>
+  <p id="selic"></p>
   <p id="previsaoCopom"></p>
   <p id="dolarAmericano"></p>
   <p id="abertura"></p>
@@ -15,31 +15,32 @@
   <p id="fechamento"></p>
 
   <script>
-    // Função para obter a Selic atual e sua respectiva data
-    async function getSelicAtual() {
+    // Função para obter a Selic
+    async function getSelic() {
       const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/1?formato=json');
       const data = await response.json();
-      const taxaSelic = data[0].valor;
-      const dataAtual = new Date(data[0].data);
-      document.getElementById('selicAtual').innerText = `Selic atual (${dataAtual.toLocaleDateString()}): ${taxaSelic}%`;
+      const selic = data[0].valor;
+      const dataVigencia = new Date(data[0].data);
+      document.getElementById('selic').innerText = `Selic (${dataVigencia.toLocaleDateString()}): ${selic}%`;
     }
 
     // Função para obter a previsão do Copom
     async function getPrevisaoCopom() {
-      // Suponha que você tenha uma fonte para obter essa previsão
-      const previsao = 5.0; // Exemplo de valor de previsão
+      const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.431/ultimos/1?formato=json');
+      const data = await response.json();
+      const previsao = data[0].valor;
       document.getElementById('previsaoCopom').innerText = `Previsão Copom: ${previsao}%`;
     }
 
-    // Função para obter a cotação do dólar americano e seus fechamentos parciais
+    // Função para obter a cotação do dólar americano
     async function getCotacaoDolar() {
       const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
       const data = await response.json();
       const dataAtual = new Date(data.date);
-      const abertura = data.rates.BRL.toFixed(2);
-      const parcial1 = data.rates.BRL.toFixed(2);
-      const parcial2 = data.rates.BRL.toFixed(2);
-      const fechamento = data.rates.BRL.toFixed(2);
+      const abertura = data.rates.BRL ? data.rates.BRL.toFixed(2) : 'aguardando';
+      const parcial1 = data.rates.BRL ? data.rates.BRL.toFixed(2) : 'aguardando';
+      const parcial2 = data.rates.BRL ? data.rates.BRL.toFixed(2) : 'aguardando';
+      const fechamento = data.rates.BRL ? data.rates.BRL.toFixed(2) : 'aguardando';
 
       document.getElementById('dolarAmericano').innerText = `Dólar Americano (${dataAtual.toLocaleDateString()}):`;
       document.getElementById('abertura').innerText = `Abertura = ${abertura}`;
@@ -50,7 +51,7 @@
 
     // Função para atualizar as informações a cada 15 minutos
     function updateInfo() {
-      getSelicAtual();
+      getSelic();
       getPrevisaoCopom();
       getCotacaoDolar();
     }

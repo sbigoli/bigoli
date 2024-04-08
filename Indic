@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taxa Selic Atual</title>
+<script>
+window.onload = function() {
+    // Faz uma requisição para a API do Banco Central do Brasil que fornece a taxa Selic
+    fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json')
+    .then(response => response.json())
+    .then(data => {
+        // Pega o último dado da lista, que deve ser o mais recente
+        const ultimaTaxa = data[data.length - 1];
+        // Exibe a data e a taxa Selic na página
+        document.getElementById('data').textContent = 'Data: ' + ultimaTaxa.data;
+        document.getElementById('taxa-selic').textContent = 'Taxa Selic: ' + ultimaTaxa.valor + '%';
+    })
+    .catch(error => console.error('Ocorreu um erro ao obter os dados da API', error));
+};
+</script>
+</head>
+<body>
+<h1>Taxa Selic Atual</h1>
+<p id="data">Data: </p>
+<p id="taxa-selic">Taxa Selic: </p>
+</body>
+</html>

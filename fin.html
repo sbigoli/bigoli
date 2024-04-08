@@ -3,38 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valores da Tabela Selic</title>
-  <style>
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    th, td {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
+  <title>Primeira Linha de Dados da Tabela</title>
 </head>
 <body>
-  <table id="selicTable">
-    <!-- Os valores da tabela serão inseridos aqui -->
+  <table id="historicoTaxasJuros">
+    <!-- Os dados da primeira linha serão inseridos aqui -->
   </table>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
-      // Fazendo uma solicitação GET para a página da Suno
-      $.get("https://www.suno.com.br/guias/taxa-selic/", function(data) {
-        // Encontrando a tabela e o tbody
-        const table = $(data).find("table");
-        const tbody = table.find("tbody");
+      // Fazendo uma solicitação GET para o site do Banco Central do Brasil
+      $.get("https://www.bcb.gov.br/controleinflacao/historicotaxasjuros", function(data) {
+        // Encontrando a tabela com o id "historicotaxasjuros" e a primeira linha de dados
+        const primeiraLinha = $(data).find("#historicotaxasjuros tbody tr:first");
 
-        // Adicionando a tabela ao elemento HTML
-        $("#selicTable").html(table);
+        // Adicionando a primeira linha de dados ao elemento HTML com o id "historicoTaxasJuros"
+        $("#historicoTaxasJuros").html(primeiraLinha);
       });
     });
   </script>

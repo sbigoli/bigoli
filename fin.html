@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Último Valor da Meta Selic</title>
+  <title>Valores da Taxa Selic</title>
 </head>
 <body>
-  <p id="ultimoValorMetaSelic">Último valor da Meta Selic % a.a:</p>
+  <p>Data: <span id="data"></span></p>
+  <p>Vigência: <span id="vigencia"></span></p>
+  <p>Meta: <span id="meta"></span></p>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
       // Fazendo uma solicitação GET para a página da Suno
       $.get("https://www.suno.com.br/guias/taxa-selic/", function(data) {
-        // Encontrando todos os valores da coluna "Meta Selic % a.a"
-        const valoresMetaSelic = $(data).find("table tr:not(:first-child) td:nth-child(2)").map(function() {
-          return $(this).text();
-        }).get();
+        // Encontrando o tbody
+        const tbody = $(data).find("tbody");
 
-        // Pegando o último valor da lista
-        const ultimoValorMetaSelic = valoresMetaSelic[valoresMetaSelic.length - 1];
+        // Encontrando os valores na primeira tr do tbody
+        const dataValor = tbody.find("tr:first-child td:nth-child(1)").text().trim();
+        const vigenciaValor = tbody.find("tr:first-child td:nth-child(2)").text().trim();
+        const metaValor = tbody.find("tr:first-child td:nth-child(3)").text().trim();
 
-        // Atualizando o parágrafo com o último valor encontrado
-        $('#ultimoValorMetaSelic').append(ultimoValorMetaSelic);
+        // Atualizando os elementos com os valores encontrados
+        $("#data").text(dataValor);
+        $("#vigencia").text(vigenciaValor);
+        $("#meta").text(metaValor);
       });
     });
   </script>

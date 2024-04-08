@@ -3,14 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valores da Taxa Selic</title>
+  <title>Valores da Tabela Selic</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
-  <p><strong>Primeira linha da tabela:</strong></p>
-  <ul id="headers"></ul>
-
-  <p><strong>Valores da primeira linha do tbody:</strong></p>
-  <ul id="values"></ul>
+  <table id="selicTable">
+    <!-- Os valores da tabela serão inseridos aqui -->
+  </table>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -21,25 +33,8 @@
         const table = $(data).find("table");
         const tbody = table.find("tbody");
 
-        // Encontrando os cabeçalhos (<th>) da tabela
-        const headers = table.find("th").map(function() {
-          return $(this).text().trim();
-        }).get();
-
-        // Exibindo os cabeçalhos na primeira linha
-        headers.forEach(function(header) {
-          $("#headers").append(`<li>${header}</li>`);
-        });
-
-        // Encontrando os valores na primeira linha do tbody
-        const values = tbody.find("tr:first-child td").map(function() {
-          return $(this).text().trim();
-        }).get();
-
-        // Exibindo os valores na segunda linha
-        values.forEach(function(value) {
-          $("#values").append(`<li>${value}</li>`);
-        });
+        // Adicionando a tabela ao elemento HTML
+        $("#selicTable").html(table);
       });
     });
   </script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fin</title>
+  <title>Exibição de Textos da Primeira Linha</title>
 </head>
 <body>
   <p>1º Valor: <span id="valor1"></span></p>
@@ -12,27 +12,35 @@
   <p>4º Valor: <span id="valor4"></span></p>
   <p>5º Valor: <span id="valor5"></span></p>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $(document).ready(function() {
+    // Função para carregar a página e extrair os dados
+    window.onload = function() {
       // Fazendo uma solicitação GET para o site do Banco Central do Brasil
-      $.get("https://www.bcb.gov.br/controleinflacao/historicotaxasjuros", function(data) {
-        // Encontrando a tabela com o id "historicotaxasjuros" e a primeira linha de dados
-        const primeiraLinha = $(data).find("#historicotaxasjuros tbody tr:first");
+      fetch("https://www.bcb.gov.br/controleinflacao/historicotaxasjuros")
+        .then(response => response.text())
+        .then(data => {
+          // Criando um elemento temporário para analisar a resposta HTML
+          const tempElement = document.createElement('div');
+          tempElement.innerHTML = data;
 
-        // Extraindo os textos dos primeiros cinco <td> da primeira linha
-        const valores = primeiraLinha.find("td").map(function() {
-          return $(this).text().trim();
-        }).get();
+          // Encontrando a tabela desejada pelo id
+          const tabelaHistorico = tempElement.querySelector('#historicotaxasjuros');
 
-        // Atualizando os elementos HTML com os valores encontrados
-        $("#valor1").text(valores[0]);
-        $("#valor2").text(valores[1]);
-        $("#valor3").text(valores[2]);
-        $("#valor4").text(valores[3]);
-        $("#valor5").text(valores[4]);
-      });
-    });
+          // Encontrando o primeiro <tr> dentro de <tbody>
+          const primeiraLinha = tabelaHistorico.querySelector('tbody tr:first-child');
+
+          // Extraindo os textos dos <td> correspondentes
+          const valores = primeiraLinha.querySelectorAll('td');
+
+          // Atualizando os elementos HTML com os valores encontrados
+          document.getElementById('valor1').innerText = valores[0].innerText.trim();
+          document.getElementById('valor2').innerText = valores[1].innerText.trim();
+          document.getElementById('valor3').innerText = valores[2].innerText.trim();
+          document.getElementById('valor4').innerText = valores[3].innerText.trim();
+          document.getElementById('valor5').innerText = valores[4].innerText.trim();
+        })
+        .catch(error => console.error('Erro ao buscar os dados:', error));
+    };
   </script>
 </body>
 </html>

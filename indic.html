@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taxa Selic Atual</title>
-<script>
-window.onload = function() {
-    // Faz uma requisição para a API do Banco Central do Brasil que fornece a taxa Selic
-    fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json')
-    .then(response => response.json())
-    .then(data => {
-        // Pega o último dado da lista, que deve ser o mais recente
-        const ultimaTaxa = data[data.length - 1];
-        // Exibe a data e a taxa Selic na página
-        document.getElementById('data').textContent = 'Data: ' + ultimaTaxa.data;
-        document.getElementById('taxa-selic').textContent = 'Taxa Selic: ' + ultimaTaxa.valor + '%';
-    })
-    .catch(error => console.error('Ocorreu um erro ao obter os dados da API', error));
-};
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taxa Selic e Cotação do Dólar</title>
 </head>
 <body>
-<h1>Taxa Selic Atual</h1>
-<p id="data">Data: </p>
-<p id="taxa-selic">Taxa Selic: </p>
+  <p>
+    Taxa Selic: <span id="taxaSelic"></span>
+  </p>
+  <p>
+    Cotação do Dólar: <span id="cotacaoDolar"></span>
+  </p>
+
+  <script>
+    // Função para obter a taxa Selic
+    async function getTaxaSelic() {
+      const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/1?formato=json');
+      const data = await response.json();
+      document.getElementById('taxaSelic').innerText = `${data[0].valor}%`;
+    }
+
+    // Função para obter a cotação do dólar
+    async function getCotacaoDolar() {
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const data = await response.json();
+      document.getElementById('cotacaoDolar').innerText = `Abertura: $${data.rates.BRL.toFixed(2)}, Fechamento: $${data.rates.BRL.toFixed(2)}`;
+    }
+
+    // Chamando as funções para exibir as informações
+    getTaxaSelic();
+    getCotacaoDolar();
+  </script>
 </body>
 </html>
